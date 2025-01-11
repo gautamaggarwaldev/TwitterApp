@@ -6,36 +6,17 @@ import {
     deleteTweet as deleteTweetService,
     updateTweet as updateTweetService
 } from "../services/tweetService.js";
+import { errorResponse, successResponse } from "../utils/responses.js";
 
 export const createTweet = async (req, res) => {
     try {
         const response = await createTweetService({
             body: req.body.body
         });
-        return res.status(StatusCodes.CREATED).json(
-            {
-                success: true,
-                data: response,
-                message: "Tweet created Successfully"
-            }
-        );
+        return successResponse(response, StatusCodes.CREATED, 'Tweet created successfully');
     }
     catch (error) {
-        console.log(error);
-        if (error.status) {
-            return res.status(error.status).json(
-                {
-                    message: error.message,
-                    success: false
-                }
-            );
-        }
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
-            {
-                message: "Internal server error",
-                success: false
-            }
-        );
+        return errorResponse(error);
     }
 }
 
@@ -44,18 +25,10 @@ export const getTweets = async (req, res) => {
     try {
         const response = await getTweetsService();
 
-        return res.status(StatusCodes.OK).json({
-            success: true,
-            data: response,
-            message: "Tweets fetched successfully"
-        });
+        return successResponse(response, StatusCodes.OK, 'Tweets fetched successfully');
     }
     catch (error) {
-        console.log(error);
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            message: 'Internal server error',
-            success: false
-        });
+        return errorResponse(error);
     }
 }
 
@@ -63,48 +36,20 @@ export const getTweetById = async (req, res) => {
     try {
         const response = await getTweetByIdService(req.params.id);
 
-        return res.status(StatusCodes.OK).json({
-            success: true,
-            data: response,
-            message: 'Tweet fetched successfully'
-        });
+        return successResponse(response, StatusCodes.OK, 'Tweet fetched successfully');
     }
     catch (error) {
-        console.log(error);
-        if (error.status) {
-            return res.status(error.status).json({
-                message: error.message,
-                success: false
-            });
-        }
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            message: 'Internal server error',
-            success: false
-        });
+        return errorResponse(error);
     }
 }
 
 export const deleteTweet = async (req, res) => {
     try {
         const response = await deleteTweetService(req.params.id);
-        return res.status(StatusCodes.OK).json({
-            message: 'Tweet delete Successfully',
-            success: true,
-            data: response
-        })
+        return successResponse(response, StatusCodes.OK, 'Tweet delete successfully');
     }
     catch (error) {
-        console.log(error);
-        if (error.status) {
-            return res.status(error.status).json({
-                message: error.message,
-                success: false
-            })
-        }
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            message: 'Something went wrong'
-        })
+        return errorResponse(error);
     }
 }
 
@@ -112,23 +57,9 @@ export const deleteTweet = async (req, res) => {
 export const updateTweet = async (req, res) => {
     try {
         const response = await updateTweetService(req.params.id, req.body.body);
-        return res.status(StatusCodes.OK).json({
-            message: 'Tweet updated successfully',
-            success: true,
-            data: response,
-        })
+        return successResponse(response, StatusCodes.OK, 'Tweet updated successfully');
     }
     catch (error) {
-        console.log(error);
-        if (error.status) {
-            return res.status(error.status).json({
-                message: error.message,
-                success: false
-            })
-        }
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            message: 'Internal Server error'
-        })
+       return errorResponse(error);
     }
 }
